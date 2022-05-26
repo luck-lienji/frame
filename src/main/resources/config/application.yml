@@ -1,0 +1,50 @@
+logging:
+  level:
+    root: debug
+
+server:
+  port: 8081
+spring:
+  application:
+    name: frame - WebApplication
+  datasource:
+    datasource1:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://192.168.222.94:3306/mytest1?useSSL=false&serverTimezone=GMT%2B8&characterEncoding=UTF-8
+      username: liwenji
+      password: 123456
+    datasource2:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://192.168.222.94:3306/mytest2?useSSL=false&serverTimezone=GMT%2B8&characterEncoding=UTF-8
+      username: liwenji
+      password: 123456
+    datasource3:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://192.168.222.94:3306/mytest3?useSSL=false&serverTimezone=GMT%2B8&characterEncoding=UTF-8
+      username: liwenji
+      password: 123456
+    hikari:
+      #最大连接池数
+      maximumPoolSize: 10
+      minimum-idle: 5
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 540000
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+
+
+
+mybatis:
+  configLocation: classpath:/mybatis-config.xml
+
+pagehelper:
+  #分页设置
+  helperDialect: 
+  reasonable: true
+  supportMethodsArguments: true
+  pageSizeZero: true
