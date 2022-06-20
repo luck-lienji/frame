@@ -1,13 +1,11 @@
-package com.example.demo.commons.configs.security;
+package com.example.demo.commons.configs.security.jwt;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.commons.configs.security.domain.UserInfo;
 import com.example.demo.commons.configs.security.enums.SecurityConstants;
-import com.example.demo.commons.configs.security.service.UserInfoService;
 import com.example.demo.commons.configs.security.service.impl.UserInfoServiceImpl;
 import com.example.demo.commons.configs.security.utils.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,7 +55,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         // 可以在此覆写尝试进行登录认证的逻辑，登录成功之后等操作不再此方法内
         // 如果使用此过滤器来触发登录认证流程，注意登录请求数据格式的问题
         // 此过滤器的用户名密码默认从request.getParameter()获取，但是这种

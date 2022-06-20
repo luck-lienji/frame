@@ -1,16 +1,11 @@
-package com.example.demo.commons.configs.security;
+package com.example.demo.commons.configs.security.jwt;
 
 import com.example.demo.commons.configs.security.utils.JwtUtils;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.StringUtils;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +38,7 @@ public class JwtAuthenticationTokenFilter extends BasicAuthenticationFilter {
             // 将认证信息存入 Spring 安全上下文中
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        // 放行请求
+        //调用后续filter
         filterChain.doFilter(request, response);
 
     }

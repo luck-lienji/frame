@@ -1,16 +1,16 @@
-package com.example.demo.commons.configs.security;
+package com.example.demo.commons.configs.security.jwt;
 
 
 import com.example.demo.commons.configs.security.domain.UserInfo;
 import com.example.demo.commons.configs.security.service.impl.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.commons.execption.BusException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -26,11 +26,9 @@ import java.util.ArrayList;
  */
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    @Resource
     private PasswordEncoder passwordEncoder;
 
-    @Resource
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
 
     /**
@@ -38,10 +36,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
      *
      * @param authentication
      * @return
-     * @throws AuthenticationException
      */
     @Override
-    public Authentication authenticate (Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate (Authentication authentication) throws UsernameNotFoundException {
         // 获取前端表单中输入后返回的用户名、密码
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
@@ -70,5 +67,26 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public boolean supports (Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
+
+
+    /**
+     * 自定义的认证逻辑
+     *
+     * @param userDetailsService
+     */
+    public void setUserDetailsService (UserDetailsService userDetailsService){
+        this.userDetailsService = userDetailsService;
+    }
+
+    /**
+     * 自定义的密码加密
+     *
+     * @param passwordEncoder
+     */
+    public void setPasswordEncoder (PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
+    }
+
+
 
 }

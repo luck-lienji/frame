@@ -19,6 +19,11 @@ import java.net.URISyntaxException;
 public class TestLogin {
     @PostMapping ("/login")
     public String login(@RequestBody UserInfo userInfo)  {
-        return "登陆成功";
+        try {
+            return "登陆成功";
+        }catch ( Exception e ){
+            e.printStackTrace ();
+            return e.getMessage ();
+        }
     }
 }

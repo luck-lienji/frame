@@ -1,9 +1,9 @@
 package com.example.demo.commons.configs.security;
 
-import com.example.demo.commons.configs.security.domain.UserInfo;
-import com.example.demo.commons.configs.security.service.UserInfoService;
+import com.example.demo.commons.configs.security.jwt.JwtAuthenticationProvider;
+import com.example.demo.commons.configs.security.jwt.JwtAuthenticationTokenFilter;
+import com.example.demo.commons.configs.security.jwt.JwtLoginFilter;
 import com.example.demo.commons.configs.security.service.impl.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,12 +13,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -33,10 +35,23 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2022/5/27 9:24
  * @Version 1.0
  */
+//定义配置类被注解的类内部包含有一个或多个被@Bean注解的方法，这些方法将会被
+//AnnotationConfigApplicationContext或AnnotationConfigWebApplicationContext类进行扫描，
+//并用于构建bean定义，初始化Spring容器。
 @Configuration
+//加载了WebSecurityConfiguration配置类, 配置安全认证策略。
+//加载了AuthenticationConfiguration,
 @EnableWebSecurity
-@EnableGlobalMethodSecurity (prePostEnabled = true)//开启权限注解,默认是关闭的，启用@PreAuthorize, @PostAuthorize, @PreFilter,@PostFilter注释。
+//用来构建一个全局的AuthenticationManagerBuilder的标志注解
+//开启基于方法的安全认证机制，也就是说在web层的controller启用注解机制的安全确认
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    /**
+     * 实现 UserDetailService 接口用来做登录认证
+     */
+    @Resource
+    UserDetailsServiceImpl userDetailsService;
 
     /**
      * 当我们接受身份验证请求时，我们需要使用提供的凭据从数据库中检索正确的身份，然后对其进行验证。为此，我们需要实现 UserDetailsService 接口，定义如下：
@@ -52,7 +67,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationProvider jwtAuthenticationProvider() {
-        return new JwtAuthenticationProvider();
+        // 创建 JwtAuthenticationProvider 实例
+        JwtAuthenticationProvider authProvider = new JwtAuthenticationProvider();
+        // 将自定义的认证逻辑添加到 JwtAuthenticationProvider
+        authProvider.setUserDetailsService(userDetailsService);
+        // 设置自定义的密码加密
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
     /**
@@ -64,7 +85,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure (AuthenticationManagerBuilder auth){
-        //在这里，auth.userDetailsService 函数调用将 DaoAuthenticationProvider 使用我们的接口实现启动实例 UserDetailsService 并将其注册到身份验证管理器中。
         // 使用自定义登录身份认证组件
         auth.authenticationProvider(jwtAuthenticationProvider());
     }
@@ -79,6 +99,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure (HttpSecurity http) throws Exception {
         // 禁用 csrf, 由于使用的是JWT，我们这里不需要csrf
         http.cors ().and ().csrf ().disable ()
+                // 由于使用jwt,不创建会话
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 //设置各个接口的权限，公共的接口设置为允许，如 swagger、登录接口、预检请求等
                 .authorizeRequests ()
                 // 跨域预检请求，预检请求

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
@@ -86,6 +87,8 @@ public class JwtUtils {
     public static boolean validateToken(String token) {
         try {
             getTokenBody(token);
+
+
             return true;
         } catch ( ExpiredJwtException e) {
             logger.warn("Request to parse expired JWT : {} failed : {}", token, e.getMessage());
