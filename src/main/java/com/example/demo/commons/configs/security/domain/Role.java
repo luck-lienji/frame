@@ -1,5 +1,11 @@
 package com.example.demo.commons.configs.security.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -8,18 +14,31 @@ import java.util.List;
  * @date 2022/5/27 16:40
  * @Version 1.0
  */
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
     /**
-     * 角色
+     * 角色id
      */
-    private List<String> roles;
+    private long roleId;
+    /**
+     * 角色名称
+     */
+    private String roleName;
+    /**
+     * 角色产权所属类型
+     */
+    private String propertyTypeId;
+    /**
+     * 角色产权所属名称
+     */
+    private String propertyTypeName;
+    /**
+     * 角色状态
+     */
+    private String roleStatus;
 
-    public List<String> getRoles () {
-        return roles;
-    }
-
-    public void setRoles (List<String> roles) {
-        this.roles = roles;
-    }
+    private ZonedDateTime createTime;
+    private ZonedDateTime updataTime;
 }

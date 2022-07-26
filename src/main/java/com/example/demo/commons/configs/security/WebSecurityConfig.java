@@ -52,6 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Resource
     UserDetailsServiceImpl userDetailsService;
+    @Resource
+    JwtAuthenticationProvider authProvider;
 
     /**
      * 当我们接受身份验证请求时，我们需要使用提供的凭据从数据库中检索正确的身份，然后对其进行验证。为此，我们需要实现 UserDetailsService 接口，定义如下：
@@ -65,10 +67,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 考虑到它只暴露了单函数原型，我们可以把它当作一个函数式接口，并以 lambda 表达式的形式提供实现。
      */
 
-    @Bean
     public JwtAuthenticationProvider jwtAuthenticationProvider() {
-        // 创建 JwtAuthenticationProvider 实例
-        JwtAuthenticationProvider authProvider = new JwtAuthenticationProvider();
+
         // 将自定义的认证逻辑添加到 JwtAuthenticationProvider
         authProvider.setUserDetailsService(userDetailsService);
         // 设置自定义的密码加密
@@ -98,22 +98,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure (HttpSecurity http) throws Exception {
         // 禁用 csrf, 由于使用的是JWT，我们这里不需要csrf
-        http.cors ().and ().csrf ().disable ()
+        http.cors().and().csrf().disable()
                 // 由于使用jwt,不创建会话
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                //设置各个接口的权限，公共的接口设置为允许，如 swagger、登录接口、预检请求等
-                .authorizeRequests ()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        //设置各个接口的权限，公共的接口设置为允许，如 swagger、登录接口、预检请求等
+        http.authorizeRequests()
                 // 跨域预检请求，预检请求
                 //与前述简单请求不同，“需预检的请求”要求必须首先使用 OPTIONS 方法发起一个预检请求到服务器，以获知服务器是否允许该实际请求。"预检请求“的使用，可以避免跨域请求对服务器的用户数据产生未预期的影响。
-                .antMatchers (HttpMethod.OPTIONS, "/**").permitAll ()
-                .antMatchers ("/login").permitAll ()
-                .antMatchers ("/swagger**/**").permitAll ()
-                .antMatchers("/static/**").permitAll()// 不拦截静态资源
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                .antMatchers("/login").permitAll()
+//                .antMatchers("/swagger**/**").permitAll()
+                //开发自测要放开，表示可以直接访问接口
+                .antMatchers("/**").permitAll()
+//                .antMatchers("/static/**").permitAll()// 不拦截静态资源
                 // 其他所有请求需要身份认证
-                .anyRequest ().authenticated ();
+                .anyRequest().authenticated();
+        http.logout().permitAll();  // 不拦截注销
         // 退出登录处理器
-        http.logout ().logoutSuccessHandler (new HttpStatusReturningLogoutSuccessHandler ());
+        http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
         // 设置未授权请求异常处理程序
         http.exceptionHandling().authenticationEntryPoint(
                         (request, response, ex) -> {
@@ -129,7 +132,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 访问 /login 开启登录认证流程过滤器
         http.addFilterBefore (new JwtLoginFilter (authenticationManager ()), UsernamePasswordAuthenticationFilter.class);
         // 访问其他路径时登录状态检查过滤器
-        http.addFilterBefore (new JwtAuthenticationTokenFilter (authenticationManager ()), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore (new JwtAuthenticationTokenFilter (authenticationManager ()), UsernamePasswordAuthenticationFilter.class);
     }
 
     /**

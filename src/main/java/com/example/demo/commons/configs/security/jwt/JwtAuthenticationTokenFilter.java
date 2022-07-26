@@ -16,7 +16,8 @@ import java.io.IOException;
 /**
  * @author liwenji
  * @ClassName JWTAuthenticationTokenFilter
- * @Description TODO,JWT接口请求校验拦截器
+ * @Description TODO, JWT接口请求校验拦截器
+ * TODO: BasicAuthenticationFilter 此过滤器会自动解析HTTP请求中头部名字为Authentication，且以Basic开头的头部信息
  * @date 2022/5/27 16:00
  * @Version 1.0
  */

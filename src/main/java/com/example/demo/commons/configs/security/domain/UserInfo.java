@@ -26,7 +26,7 @@ public class UserInfo implements UserDetails{
     private Integer deleteFlag;
     private Integer expired;
     private Integer disabled;
-    private Role roles;
+    private List<Role> roles;
     private Set<GrantedAuthority> authorities;
 
     public Long getUserId () {
@@ -45,11 +45,8 @@ public class UserInfo implements UserDetails{
         this.account = account;
     }
 
-    public String getUserName () {
-        return username;
-    }
 
-    public void setUserName (String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -113,11 +110,11 @@ public class UserInfo implements UserDetails{
         this.disabled = disabled;
     }
 
-    public Role getRoles () {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles (Role roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
@@ -164,7 +161,7 @@ public class UserInfo implements UserDetails{
     public UserInfo() {
     }
 
-    public UserInfo (Long userId, String account, String username, String password, String email, String phone, ZonedDateTime birthday, String userStatus, Integer deleteFlag, Integer expired, Integer disabled, Role roles, Set<GrantedAuthority> authorities) {
+    public UserInfo(Long userId, String account, String username, String password, String email, String phone, ZonedDateTime birthday, String userStatus, Integer deleteFlag, Integer expired, Integer disabled, List<Role> roles, Set<GrantedAuthority> authorities) {
         this.userId = userId;
         this.account = account;
         this.username = username;

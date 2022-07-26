@@ -21,9 +21,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         if ( "liwenji".equals (userName) ){
             List<UserInfo> userInfos = new ArrayList<>();
             UserInfo userInfo = new UserInfo ();
-            userInfo.setUserId (123456L);
-            userInfo.setUserName ("liwenji");
-            userInfo.setPassword ("123456");
+            userInfo.setUserId(123456L);
+            userInfo.setUsername("liwenji");
+            userInfo.setPassword("123456");
             userInfos.add(userInfo);
             return userInfos;
         }else {

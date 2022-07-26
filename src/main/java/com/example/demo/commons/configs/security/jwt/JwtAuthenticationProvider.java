@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 
 import javax.annotation.Resource;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
  * @date 2022/5/27 18:23
  * @Version 1.0
  */
+@Service
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private PasswordEncoder passwordEncoder;
@@ -47,7 +49,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         UserInfo userInfo = (UserInfo ) userDetailsService.loadUserByUsername(username);
         if (passwordEncoder.matches(password, passwordEncoder.encode (userInfo.getPassword()))) {
             //如果密码匹配，则返回 Authentication 接口的实现以及必要的详细信息
-            return new UsernamePasswordAuthenticationToken(username, password,userInfo.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(userInfo, null, userInfo.getAuthorities());
         } else {	//密码不匹配，抛出异常
             throw new BadCredentialsException ("账号或密码错误!");
         }

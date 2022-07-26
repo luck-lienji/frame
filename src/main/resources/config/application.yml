@@ -44,7 +44,48 @@ mybatis:
 
 pagehelper:
   #分页设置
-  helperDialect: 
+  helperDialect:
   reasonable: true
   supportMethodsArguments: true
   pageSizeZero: true
+
+# redis 配置
+redis-config:
+
+  # 资源池设置与使用相关参数
+  maxIdle: 300 #资源池允许的最大空闲连接数  默认值 8，
+  minIdle: 3 #最小空闲连接数
+  maxTotal: 1000 #控制一个 pool可分配多少个jedis实例,用来替换上面的redis.maxActive,如果是jedis 2.4以后用该属性。资源池中的最大连接数，默认值 8
+  blockWhenExhausted: true # 当资源池用尽后，调用者是否要等待。只有当值为true时，下面的maxWaitMillis才会生效。 建议使用默认值（true）。
+  maxWaitMillis: 1000 #最大建立连接等待时间。当资源池连接用尽后，调用者的最大等待时间（单位为毫秒）。默认值为 -1（负数表示永不超时）
+  testOnBorrow: true #是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个, 默认false，业务量很大时候建议设置为false，减少一次ping的开销。
+  testOnReturn: true #向资源池归还连接时是否做连接有效性检测（ping）。检测到无效连接将会被移除。 默认false，业务量很大时候建议设置为false，减少一次ping的开销。
+  jmxEnabled: true # 是否开启JMX监控.默认值 true，建议开启，请注意应用本身也需要开启。
+
+  # 空闲Jedis对象检测由下列四个参数组合完成。
+  testWhileIdle: true # 是否在空闲资源监测时通过ping命令监测连接有效性，无效连接将被销毁。默认值 false，建议 true
+  timeBetweenEvictionRunsMillis: 30000 #空闲资源的检测周期（单位为毫秒） 如果为负数,则不运行逐出线程, 默认-1，建议设置，周期自行选择。
+  minEvictableIdleTimeMillis: 300000 #资源池中资源的最小空闲时间（单位为毫秒），达到此值后空闲资源将被移除。 默认1800000毫秒(30分钟)
+  numTestsPerEvictionRun: 1024 #做空闲资源检测时，每次检测资源的个数，每次释放连接的最大数目   默认3，可根据自身应用连接数进行微调，如果设置为 -1，就是对所有连接做空闲监测。
+
+  commandTimeout: 10000 # 客户端超时时间单位是毫秒 默认是 2000
+  password: 123456 #密码
+  dataBase: group.portal.OSS3_APP #分组名
+
+  # 集群配置
+  cluster:
+    nodes: 192.168.47.146:6379
+    max-redirects: 6
+    instanceName: portal #集群的用户名
+    soTimeout: 10000 # 读写超时
+    # 重试次数，JedisCluster在连接的时候，如果出现连接错误，则会尝试随机连接一个节点，如果当期尝试的节点返回Moved重定向，jedis cluster会重新更新clots缓存。
+    # 如果重试依然返回连接错误，会接着再次重试，当重试次数大于maxAttempts会报出Jedis ClusterMaxRedirectionsException(“to many Cluster redireciotns?”)异常
+    maxAttempts: 5
+
+
+
+  #单机版
+  host: 192.168.47.146
+  port: 6379
+
+

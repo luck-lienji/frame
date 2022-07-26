@@ -112,12 +112,10 @@ public class JwtUtils {
         //token 解析
         Claims claims = getTokenBody(token);
         // 获取用户角色字符串
-        Role roles = (Role)claims.get(SecurityConstants.TOKEN_ROLE_CLAIM);
+        List<Role> roles = (List<Role>) claims.get(SecurityConstants.TOKEN_ROLE_CLAIM);
         List<SimpleGrantedAuthority> authorities =
                 Objects.isNull(roles) ? Collections.singletonList(new SimpleGrantedAuthority(SecurityConstants.ROLE_USER)) :
-                        roles.getRoles ().stream()
-                                .map(SimpleGrantedAuthority::new)
-                                .collect(Collectors.toList());
+                        roles.stream().map(n -> new SimpleGrantedAuthority(String.valueOf(n.getRoleId()))).collect(Collectors.toList());
         // 获取用户名
         String userName = claims.getSubject();
 

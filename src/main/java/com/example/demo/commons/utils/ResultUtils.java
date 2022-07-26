@@ -17,35 +17,35 @@ public class ResultUtils {
 
 
     public static <T> Result<T> success(T data) {
-        return new Result<>(ResultCode.SUCCESS,ResultCode.SUCESSS_MESSAGE ,data);
+        return new Result<>(ResultCode.SUCCESS, ResultCode.SUCESSS_MESSAGE, data);
     }
 
     public static <T> Result<T> success(@NotNull String message) {
-        return new Result<>(ResultCode.SUCCESS, message,null);
+        return new Result<>(ResultCode.SUCCESS, message, null);
     }
 
-    public static <T> Result<T> success(String message,T data) {
-        return new Result<>(ResultCode.SUCCESS, message,data);
+    public static <T> Result<T> success(String message, T data) {
+        return new Result<>(ResultCode.SUCCESS, message, data);
     }
 
-    public static <T> Result<T> success(String message,T data,long total) {
-        return new Result<>(ResultCode.SUCCESS, message,data,total);
+    public static <T> Result<T> success(String message, T data, long total) {
+        return new Result<>(ResultCode.SUCCESS, message, data, total);
     }
 
     public static <T> Result<T> ok(T data) {
-        return new Result<>(ResultCode.OK,ResultCode.SUCESSS_MESSAGE, data);
+        return new Result<>(ResultCode.OK, ResultCode.SUCESSS_MESSAGE, data);
     }
 
     public static <T> Result<T> ok(@NotNull String message) {
-        return new Result<>(ResultCode.OK, message,null);
+        return new Result<>(ResultCode.OK, message, null);
     }
 
-    public static <T> Result<T> ok(String message,T data) {
-        return new Result<>(ResultCode.OK, message,data);
+    public static <T> Result<T> ok(String message, T data) {
+        return new Result<>(ResultCode.OK, message, data);
     }
 
     public static <T> Result<T> failure(int code, String message) {
-        return new Result<>(code, message,null);
+        return new Result<>(code, message, null);
     }
 
 

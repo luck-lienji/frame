@@ -28,7 +28,7 @@ public class DataSourceAspect {
      * @param point      切点
      * @param dataSource 要切换的数据源
      */
-    @Before ("@annotation(dataSource)")
+    @Before("@annotation(dataSource)")
     public void switchDataSource(JoinPoint point, DataSource dataSource) {
         if (!DynamicDataSourceContextHolder.containDataSourceKey(dataSource.value())) {
             log.error("DataSource [{}] doesn't exist, use default DataSource [{}] ",
@@ -47,7 +47,7 @@ public class DataSourceAspect {
      * @param point      切点
      * @param dataSource 清除指定的数据源
      */
-    @After ("@annotation(dataSource)")
+    @After("@annotation(dataSource)")
     public void restoreDataSource(JoinPoint point, DataSource dataSource) {
         // 将数据源置为默认数据源
         DynamicDataSourceContextHolder.clearDataSourceKey();
